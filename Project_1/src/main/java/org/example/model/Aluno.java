@@ -2,6 +2,8 @@ package org.example.model;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name= "alunos")
 public class Aluno {
@@ -12,9 +14,9 @@ public class Aluno {
     private String name;
     private String ra;
     private String email;
-    private double note1;
-    private double note2;
-    private double note3;
+    private BigDecimal note1;
+    private BigDecimal note2;
+    private BigDecimal note3;
 
 
     public void setId(Long id) {
@@ -48,28 +50,27 @@ public class Aluno {
         this.email = email;
     }
 
-    public double getNote1() {
+    public BigDecimal getNote1() {
         return note1;
     }
 
-    public void setNote1(double note1) {
+    public void setNote1(BigDecimal note1) {
         this.note1 = note1;
     }
 
-    public double getNote2() {
+    public BigDecimal getNote2() {
         return note2;
     }
 
-    public void setNote2(double note2) {
+    public void setNote2(BigDecimal note2) {
         this.note2 = note2;
     }
 
-    public double getNote3() {
+    public BigDecimal getNote3() {
         return note3;
     }
 
-    public void setNote3(double note3) {
+    public void setNote3(BigDecimal note3) {
         this.note3 = note3;
     }
-
 }

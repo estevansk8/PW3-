@@ -7,6 +7,8 @@ import org.example.util.JPAUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Scanner;
 
 @SpringBootApplication
@@ -65,53 +67,147 @@ public class GerenciarAlunos {
 
             switch (option){
                 case 1:
-                    Aluno aluno = new Aluno();
+                    Aluno novoAluno = new Aluno();
 
                     System.out.println("Cadastrar aluno:\n");
                     System.out.println("Digite o nome: ");
                     String nome = scanner.next();
-                    aluno.setName(nome);
+                    novoAluno.setName(nome);
 
                     System.out.println("Digite o RA: ");
                     String ra = scanner.next();
-                    aluno.setRa(ra);
+                    novoAluno.setRa(ra);
 
                     System.out.println("Digite o email: ");
                     String email = scanner.next();
-                    aluno.setEmail(email);
+                    novoAluno.setEmail(email);
 
                     System.out.println("Digite a nota 1: ");
-                    Double nota1 = scanner.nextDouble();
-                    aluno.setNote1(nota1);
+                    BigDecimal nota1 = scanner.nextBigDecimal();
+                    novoAluno.setNote1(nota1);
 
                     System.out.println("Digite a nota 2: ");
-                    Double nota2 = scanner.nextDouble();
-                    aluno.setNote2(nota2);
+                    BigDecimal nota2 = scanner.nextBigDecimal();
+                    novoAluno.setNote2(nota2);
 
                     System.out.println("Digite a nota 3: ");
-                    Double nota3 = scanner.nextDouble();
-                    aluno.setNote3(nota3);
+                    BigDecimal nota3 = scanner.nextBigDecimal();
+                    novoAluno.setNote3(nota3);
 
-                    dao.cadastrar(aluno);
-                    em.persist(aluno);
-
-
+                    dao.cadastrar(novoAluno);
+                    em.persist(novoAluno);
                     break;
+
                 case 2:
                     System.out.println("Excluir aluno:\n");
+                    System.out.println("Buscar aluno pelo nome:\n");
+                    System.out.println("Digite o nome: ");
+                    String nomeExclusao = scanner.next();
+                    List<Aluno> alunosExcluidos = dao.buscarPorNome(nomeExclusao);
+
+                    if (alunosExcluidos.isEmpty()){
+                        System.out.println("ALUNO NÃO ENCONTRADO!!!");
+                    }else {
+                        for (Aluno aluno : alunosExcluidos){
+                            em.remove(aluno);
+                            System.out.println(aluno.getName() + " excluido com sucesso!!");
+                        }
+                    }
                     break;
+
                 case 3:
                     System.out.println("Alterar aluno:\n");
+                    System.out.println("Buscar aluno pelo nome:\n");
+                    System.out.println("Digite o nome: ");
+                    String nomeAlteracao = scanner.next();
+                    List<Aluno> alunosAlteracao = dao.buscarPorNome(nomeAlteracao);
+
+                    if (alunosAlteracao.isEmpty()) System.out.println("ALUNO NÃO ENCONTRADO!!!");
+                    else{
+                        for (Aluno aluno : alunosAlteracao){
+                            System.out.println("DADOS ALUNO: \n");
+                            System.out.println("Nome: " + aluno.getName());
+                            System.out.println("RA: " + aluno.getRa());
+                            System.out.println("Email: " +aluno.getEmail());
+                            System.out.println("Notas: " + aluno.getNote1() +" - "+
+                                    aluno.getNote2() + " - "+ aluno.getNote3());
+
+                            System.out.println("Digite o nome: ");
+                            String nomeNovo = scanner.next();
+                            aluno.setName(nomeNovo);
+
+                            System.out.println("Digite o RA: ");
+                            String raNovo = scanner.next();
+                            aluno.setRa(raNovo);
+
+                            System.out.println("Digite o email: ");
+                            String emailNovo = scanner.next();
+                            aluno.setEmail(emailNovo);
+
+                            System.out.println("Digite a nota 1: ");
+                            BigDecimal nota1Novo = scanner.nextBigDecimal();
+                            aluno.setNote1(nota1Novo);
+
+                            System.out.println("Digite a nota 2: ");
+                            BigDecimal nota2Novo = scanner.nextBigDecimal();
+                            aluno.setNote2(nota2Novo);
+
+                            System.out.println("Digite a nota 3: ");
+                            BigDecimal nota3Novo = scanner.nextBigDecimal();
+                            aluno.setNote3(nota3Novo);
+
+                            em.persist(aluno);
+                        }
+                    }
                     break;
+
                 case 4:
                     System.out.println("Buscar aluno pelo nome:\n");
+                    System.out.println("Digite o nome: ");
+                    String nomeBusca = scanner.next();
+                    List<Aluno> alunos = dao.buscarPorNome(nomeBusca);
+
+                    if (alunos.isEmpty()) System.out.println("ALUNO NÃO ENCONTRADO!!!");
+                    else{
+                        for (Aluno alunoNome : alunos){
+                            System.out.println("DADOS DO ALUNO:\n");
+                            System.out.println("Nome: " + alunoNome.getName());
+                            System.out.println("RA: " + alunoNome.getRa());
+                            System.out.println("Email: " +alunoNome.getEmail());
+                            System.out.println("Notas: " + alunoNome.getNote1() +" - "+
+                                    alunoNome.getNote2() + " - "+ alunoNome.getNote3());
+                        }
+                    }
                     break;
+
                 case 5:
                     System.out.println("Listar alunos:\n");
+                    List<Aluno> todos = dao.buscarTodos();
+
+                    if (todos.isEmpty()) System.out.println("LISTA VAZIA!!!");
+                    else{
+                        for (Aluno aluno: todos){
+                            double media = (aluno.getNote1().doubleValue() + aluno.getNote2().doubleValue() + aluno.getNote3().doubleValue()) / 3;
+
+                            System.out.println("Exibindo todos alunos: \n");
+                            System.out.println("Nome: " + aluno.getName());
+                            System.out.println("RA: " + aluno.getRa());
+                            System.out.println("Email: " +aluno.getEmail());
+                            System.out.println("Notas: " + aluno.getNote1() +" - "+
+                                    aluno.getNote2() + " - "+ aluno.getNote3());
+                            System.out.printf("Media: %.2f\n", (media));
+
+                            if (media < 4) System.out.println("Situacao: Reprovado");
+                            if (media >= 4 && media < 6) System.out.println("Situacao: Recuperacao");
+                            if (media >= 6) System.out.println("Situacao: Aprovado");
+                        }
+                    }
                     break;
+
                 case 6:
                     System.out.println("Bye Bye!");
                     break;
+
                 default:
                     System.out.println("OPCAO INVALIDA!!!!");
             }
@@ -123,7 +219,7 @@ public class GerenciarAlunos {
 
     }
 
-    private void cadastrarAluno(){
+    public void cadastrarAluno(){
         Scanner sc = new Scanner(System.in);
         Aluno aluno = new Aluno();
 
@@ -148,15 +244,16 @@ public class GerenciarAlunos {
         aluno.setEmail(email);
 
         System.out.println("Digite a nota 1: ");
-        Double nota1 = sc.nextDouble();
+
+        BigDecimal nota1 = sc.nextBigDecimal();
         aluno.setNote1(nota1);
 
         System.out.println("Digite a nota 2: ");
-        Double nota2 = sc.nextDouble();
+        BigDecimal nota2 = sc.nextBigDecimal();
         aluno.setNote2(nota2);
 
         System.out.println("Digite a nota 3: ");
-        Double nota3 = sc.nextDouble();
+        BigDecimal nota3 = sc.nextBigDecimal();
         aluno.setNote3(nota3);
 
         dao.cadastrar(aluno);
