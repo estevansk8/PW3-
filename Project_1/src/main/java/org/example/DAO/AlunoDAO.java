@@ -13,12 +13,20 @@ public class AlunoDAO {
         this.em = em;
     }
 
-    public void cadastrar(Aluno aluno){
+    public void save(Aluno aluno){
+        // Iniciando uma transação:
+        this.em.getTransaction().begin();
         this.em.persist(aluno);
+        this.em.getTransaction().commit();
     }
 
-    public Aluno buscarPorID(Double id){
-        return em.find(Aluno.class, id);
+    public void delete(Aluno aluno){
+        if (aluno == null) return;
+
+        // Iniciando uma transação:
+        this.em.getTransaction().begin();
+        this.em.remove(aluno);
+        this.em.getTransaction().commit();
     }
 
     public List<Aluno> buscarPorNome(String nome) throws NoResultException {

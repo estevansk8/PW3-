@@ -73,4 +73,17 @@ public class Aluno {
     public void setNote3(BigDecimal note3) {
         this.note3 = note3;
     }
+
+    @Override
+    public String toString() {
+        return "Aluno{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", ra='" + ra + '\'' +
+                ", email='" + email + '\'' +
+                ", note1=" + note1 +
+                ", note2=" + note2 +
+                ", note3=" + note3 +
+                '}';
+    }
 }
